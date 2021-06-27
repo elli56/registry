@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, request, flash
+from flask import Flask, render_template, url_for, redirect, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_user, login_required, LoginManager, logout_user, UserMixin, current_user
 from flask_bcrypt import Bcrypt
@@ -35,8 +35,9 @@ class Entrie(db.Model):
 db.create_all()
 
 login_manager = LoginManager()
+login_manager.login_view = 'login'
 login_manager.init_app(app)
-login_manager.login_view = "login"
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -56,9 +57,14 @@ def login():
     if user:
         if bcrypt.check_password_hash(user.password, password):
             login_user(user)
-            return redirect(url_for('dashboard', id = current_user.id))
+
+            next_page = request.args.get('next') # Сохраняем тот адрес куда пользователь хотел попасть до перенаправления на авторизацию
+            if next_page:
+                return redirect(next_page)
+            else:
+                return redirect(url_for('dashboard'))
         else:
-            return redirect(url_for('login'))
+            flash("Login or password isn't correct")
     return render_template('login.html')
 
 
@@ -89,13 +95,19 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/dashboard/<int:id>')
+@app.route('/dashboard')
 @login_required
 def dashboard():
     user = current_user
 
     return render_template('dashboard.html', user=user)
 
+@app.route('/dashboard/<int:id>/all-entries')
+@login_required
+def all_entries(id):
+    entries = Entrie.query.filter_by(user_id=id).all()
+    print(entries)
+    return render_template('all_entries.html', entries=entries)
 
 
 @app.route('/create-entrie', methods=['GET', 'POST'])
@@ -109,7 +121,7 @@ def create():
         new_entrie = Entrie(title=title, description=description, content=content, user_id=current_user.id)
         db.session.add(new_entrie)
         db.session.commit()
-        return redirect('/dashboard')
+        return redirect(url_for('dashboard'))
 
     return render_template('create.html')
 
@@ -119,8 +131,9 @@ def create():
 def redirect_to_signin(response):  #если пользователь будет ломиться на страничку куда нельзя без авторизации 
     # мы будем сразу его перенапрвлять на старничку с логином после чего будем перенаправлять туда куда он хотел попасть
     #response это тот ответ который даеют любой метод куда нельзя например код 401
-    if response.status_code == 404:
-        return redirect(url_for('login'))
+    print("CODE:", response.status_code)
+    if response.status_code == 401:
+        return redirect(url_for('login') + '?next=' + request.url)
 
     return response 
 

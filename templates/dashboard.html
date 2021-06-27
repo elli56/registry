@@ -9,6 +9,8 @@ Dashboard page
 <h1>Profile</h1>
 <p>name: {{ user.username }}</p>
 <p>id: {{ user.id }}</p>
-<a href="{{ url_for('logout') }}" class="btn btn-primary btn-lg">Logout</a>
+<a class="btn btn-warning mb-4" href="/create-entrie">Создать статью</a><br>
+<a href="{{ url_for('logout') }}" class="btn btn-primary btn-lg mb-4">Logout</a><br>
+<a href="{{ url_for('all_entries', id=user.id) }}" class="btn btn-primary btn-lg mb-4">All entries</a>
 
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+creating page
+{% endblock %}
+
+{% block body %}
+
+<h1>All entries</h1>
+
+    {% if entries|length > 0 %}
+
+        {% for entry in entries %}
+            <div class="alert alert-info">
+                <h2>{{ entry.title }}</h2>
+                <p>{{ entry.description }}</p>
+                <p><b>дата: {{ entry.date.date() }}</b></p>
+                <a href="/posts/{{ entry.id }}" class="mb-3 btn btn-dark">Открыть статью</a>
+            </div>
+        {% endfor %}
+        
+    {% else %}
+            <p>Статей пока нет</p>
+
+    {% endif %}
+
+
+{% endblock %}
