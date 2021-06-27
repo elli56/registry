@@ -7,6 +7,8 @@ Dashboard page
 {% block body %}
 
 <h1>Profile</h1>
+<p>name: {{ user.username }}</p>
+<p>id: {{ user.id }}</p>
 <a href="{{ url_for('logout') }}" class="btn btn-primary btn-lg">Logout</a>
 
 {% endblock %}
