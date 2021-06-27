@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard page
+{% endblock %}
+
+{% block body %}
+
+<h1>Profile</h1>
+<a href="{{ url_for('logout') }}" class="btn btn-primary btn-lg">Logout</a>
+
+{% endblock %}

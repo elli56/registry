@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Register page
+{% endblock %}
+
+{% block body %}
+
+<h1>Register user</h1>
+<form action="" method="POST">
+    <div class="mb-3 col-md-3">
+        <!-- <label for="username" class="form-label">Username</label> -->
+        <input type="text" class="form-control" id="username" name="user" placeholder="Your username">
+    </div>
+    <div class="mb-3 col-md-3">
+        <!-- <label for="password" class="form-label">password</label> -->
+        <input type="password" class="form-control" name="pass" id="password" placeholder="Your password">
+    </div>
+    <div class="mb-3 col-md-3">
+        <!-- <label for="password2" class="form-label">Repeat your password</label> -->
+        <input type="password" class="form-control" name="pass2" id="password2" placeholder="Repeat password">
+    </div>
+    <button type="submit" class="mb-3 btn btn-dark">Sign in</button>
+</form>
+<a href="{{ url_for('login') }}" class="btn-link">Already have an account? Log In</a>
+{% endblock %}

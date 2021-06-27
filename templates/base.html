@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm">
+        <p class="h5 my-0 me-md-auto fw-normal">Company name</p>
+        <nav class="my-2 my-md-0 me-md-3">
+            <a class="p-2 text-dark" href="/">Главная</a>
+            <a class="p-2 text-dark" href="{{ url_for('login') }}">Log In</a>
+            <a class="p-2 text-dark" href="{{ url_for('register') }}">Sign In</a>
+            <a class="btn btn-warning" href="#">Создать статью</a>
+            <a class="p-2 text-dark" href="/dashboard">Личный кабинет</a>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        {% block body %}{% endblock %}
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+    </div>
+    
+    <footer class="container pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+            <div class="col-12 col-md">
+                <img class="mb-2" src="data:image/png;base64,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" alt="" width="30" height="30">
+                <small class="d-block mb-3 text-muted">© 2017–2021</small>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Features</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Cool stuff</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Random feature</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Team feature</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Stuff for developers</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Another one</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Last time</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Resources</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Resource</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Resource name</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Another resource</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Final resource</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>About</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Team</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Locations</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Privacy</a></li>
+                    <li><a class="link-secondary" href="https://ic.pics.livejournal.com/huy_sobachiy/16841555/1074/1074_320.jpg">Terms</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 
