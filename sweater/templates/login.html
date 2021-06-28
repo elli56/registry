@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Login page
+{% endblock %}
+
+{% block body %}
+
+<h1>Login User</h1>
+
+<form action="" method="POST">
+    <div class="mb-3 col-md-3">
+        <!-- <label for="username" class="form-label">Username</label> -->
+        <input type="text" class="form-control" id="username" name="user" placeholder="Your username">
+    </div>
+    <div class="mb-3 col-md-3">
+        <!-- <label for="password" class="form-label">password</label> -->
+        <input type="password" class="form-control" name="pass" id="password" placeholder="Your password">
+    </div>
+    <button type="submit" class="mb-3 btn btn-dark">Log In</button>
+</form>
+<a href="{{ url_for('register') }}" class="btn-link">Haven't account yet? Sign In</a>
+{% endblock %}
