@@ -19,6 +19,9 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.LargeBinary(), nullable=False)
+    name = db.Column(db.String(50), nullable=True)
+    soname = db.Column(db.String(50), nullable=True)
+    nick = db.Column(db.String(50), nullable=True)
     entries = db.relationship("Entrie", backref="owner")
 
 
@@ -28,6 +31,7 @@ class Entrie(db.Model):
     description = db.Column(db.String(150), nullable=False)
     content = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
+    private = db.Column(db.Boolean, default=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
@@ -105,6 +109,23 @@ def dashboard():
     user = current_user
 
     return render_template('dashboard.html', user=user)
+
+
+@app.route('/dashboard-update/<int:user_id>', methods=['GET','POST'])
+@login_required
+def dashboard_update(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if request.method == 'POST':
+        user.name = request.form['name']
+        user.soname = request.form['soname']
+        user.nick = request.form['nick']
+        db.session.commit()
+        return redirect(url_for('dashboard'))
+    return render_template('update_dashboard_info.html', user=user)
+
+
+
+
 
 @app.route('/dashboard/<int:id>/all-entries')
 @login_required
