@@ -14,11 +14,13 @@ app.secret_key = 'some secret salt'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.LargeBinary(), nullable=False)
     entries = db.relationship("Entrie", backref="owner")
+
 
 class Entrie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -123,7 +125,7 @@ def create():
         new_entrie = Entrie(title=title, description=description, content=content, user_id=current_user.id)
         db.session.add(new_entrie)
         db.session.commit()
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('all_entries', id=session['user_id']))
 
     return render_template('create.html')
 
