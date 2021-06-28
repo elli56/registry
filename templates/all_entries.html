@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+creating page
+{% endblock %}
+
+{% block body %}
+
+<h1>All entries</h1>
+
+    <a class="btn btn-warning mb-4" href="/create-entrie">Создать новую статью</a><br>
+
+    {% if entries|length > 0 %}
+        <ol>
+        
+        {% for entry in entries %}
+            <li>
+                <div class="alert alert-info">
+                    <h2>{{ entry.title }}</h2>
+                    <p>{{ entry.description }}</p>
+                    <p><b>дата: {{ entry.date.date() }}</b></p>
+                    <p><b>автор: {{ entry.author_nick }}</b></p>
+                    <a href="/all-entries/{{ entry.id }}/post-detail" class="mb-3 btn btn-dark">Открыть статью</a>
+                </div>
+            </li>
+        {% endfor %}
+
+        </ol>
+    {% else %}
+            <p>Статей пока нет</p>
+
+    {% endif %}
+
+
+{% endblock %}

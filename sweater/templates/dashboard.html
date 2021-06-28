@@ -7,7 +7,7 @@ Dashboard page
 {% block body %}
 
 <h1>Profile</h1>
-<p>name: {{ user.username }}</p>
+<p>login: {{ user.username }}</p>
 <p>id: {{ user.id }}</p>
 <a class="p-2 text-dark" href="{{ url_for('dashboard_change_pass', user_id=user.id) }}">Сменить пароль</a>
 <div>

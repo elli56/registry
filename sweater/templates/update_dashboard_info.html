@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard page
+{% endblock %}
+
+{% block body %}
+
+<h1>Profile</h1>
+<p>login: {{ user.username }}</p>
+<p>id: {{ user.id }}</p>
+
+<form action="" method="POST">
+    <p>Имя: <input type="text" name="name" id="name" class="form-control" placeholder="Введите имя" value="{{ user.name }}"></p><br>
+    <p>Фамилия: <input type="text" name="soname" id="soname" class="form-control" placeholder="Введите фамилию" value="{{ user.soname }}"></p><br>
+    <p>Псевдоним: <input type="text" name="nick" id="nick" class="form-control" placeholder="Введите псевдоним" value="{{ user.nick }}"></p><br>
+    <input type="submit" class="btn btn-success" value="Обновить">
+</form>
+
+{% endblock %}
