@@ -8,4 +8,19 @@ Main page
 
 <h1>Main page</h1>
 
+<ul>
+
+{% for entry in entries %}
+    <li>
+        <div class="alert alert-info">
+            <h2>{{ entry.title }}</h2>
+            <p>{{ entry.description }}</p>
+            <p><b>дата: {{ entry.date.date() }}</b></p>
+            <a href="{{ url_for('completely_entrie', entry_id=entry.id) }}" class="mb-3 btn btn-dark">Читать полностью</a>
+        </div>
+    </li>
+{% endfor %}
+
+</ul>
+
 {% endblock %}

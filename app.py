@@ -52,7 +52,8 @@ def load_user(user_id):
 
 @app.route('/')
 def main():
-    return render_template('main.html')
+    all_not_private_entries = Entrie.query.filter_by(private=False)
+    return render_template('main.html', entries=all_not_private_entries)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -170,6 +171,13 @@ def create():
 def post_detail(id):
     post = Entrie.query.filter_by(id=id).first()
     return render_template('post_detail.html', post=post)
+
+
+@app.route('/completely-entrie/<int:entry_id>/')
+def completely_entrie(entry_id):
+    post = Entrie.query.filter_by(id=entry_id).first()
+    return render_template('completely_entrie.html', post=post)
+
 
 
 @app.route('/change/<int:id>', methods=['GET', 'POST'])
