@@ -15,7 +15,7 @@ creating page
                 <h2>{{ entry.title }}</h2>
                 <p>{{ entry.description }}</p>
                 <p><b>дата: {{ entry.date.date() }}</b></p>
-                <a href="/posts/{{ entry.id }}" class="mb-3 btn btn-dark">Открыть статью</a>
+                <a href="/all-entries/{{ entry.id }}/post-detail" class="mb-3 btn btn-dark">Открыть статью</a>
             </div>
         {% endfor %}
         

@@ -51,13 +51,13 @@ def main():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    user = request.form.get('user')
+    user = request.form.get('user') #запрашиваем через метод get что бы в случае чего не сломалось ничего
     password = request.form.get('pass')
-    user = User.query.filter_by(username=user).first()
-    if user:
+    if user and password:
+        user = User.query.filter_by(username=user).first()
         if bcrypt.check_password_hash(user.password, password):
             login_user(user)
-
+            session['user_id'] = user.id # сохраняем в сессию user_id что бы иметь доступ к нему из всех методов
             next_page = request.args.get('next') # Сохраняем тот адрес куда пользователь хотел попасть до перенаправления на авторизацию
             if next_page:
                 return redirect(next_page)
@@ -65,6 +65,8 @@ def login():
                 return redirect(url_for('dashboard'))
         else:
             flash("Login or password isn't correct")
+    else:
+        flash('Please fill login and password')
     return render_template('login.html')
 
 
@@ -125,6 +127,36 @@ def create():
 
     return render_template('create.html')
 
+
+@app.route('/all-entries/<int:id>/post-detail')
+@login_required
+def post_detail(id):
+    post = Entrie.query.filter_by(id=id).first()
+    return render_template('post_detail.html', post=post)
+
+
+@app.route('/change/<int:id>', methods=['GET', 'POST'])
+@login_required
+def change(id):
+    changing_entrie = Entrie.query.filter_by(id=id).first()
+    if request.method == 'POST':
+        changing_entrie.title = request.form['title']
+        changing_entrie.description = request.form['description']
+        changing_entrie.content = request.form['content']
+        db.session.commit()
+        return redirect(url_for('all_entries', id=changing_entrie.user_id))
+    
+    return render_template('change.html', entrie=changing_entrie)
+
+
+@app.route('/remove/<int:id>')
+@login_required
+def remove(id):
+    removing_entrie = Entrie.query.filter_by(id=id).first()
+    db.session.delete(removing_entrie)
+    db.session.commit()
+    user_id = session['user_id']
+    return redirect(url_for('all_entries', id=user_id))
 
 
 @app.after_request
