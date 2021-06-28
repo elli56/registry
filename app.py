@@ -32,6 +32,7 @@ class Entrie(db.Model):
     content = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
     private = db.Column(db.Boolean)
+    author_nick = db.Column(db.String(50), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
@@ -87,6 +88,7 @@ def logout():
 def register():
     if request.method == 'POST':
         user = request.form['user']
+        nick = request.form['nick']
         password = request.form['pass']
         password2 = request.form['pass2']
 
@@ -96,8 +98,7 @@ def register():
             flash('Passwords are not equal! Try again')
         else:
             hashed_pass = bcrypt.generate_password_hash(request.form['pass'])
-            new_user = User(username=user, password=hashed_pass)
-
+            new_user = User(username=user, password=hashed_pass, nick=nick)
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for('login'))
@@ -120,6 +121,7 @@ def dashboard_update(user_id):
         user.soname = request.form['soname']
         user.nick = request.form['nick']
         db.session.commit()
+        session['nick'] = user.nick
         return redirect(url_for('dashboard'))
     return render_template('update_dashboard_info.html', user=user)
 
@@ -158,7 +160,7 @@ def create():
         description = request.form['description']
         content = request.form['content']
         private = bool(request.form.get('private_entrie'))
-        new_entrie = Entrie(title=title, description=description, content=content, user_id=current_user.id, private=private)
+        new_entrie = Entrie(title=title, description=description, content=content, user_id=current_user.id, private=private, author_nick=current_user.nick)
         db.session.add(new_entrie)
         db.session.commit()
         return redirect(url_for('all_entries', id=session['user_id']))
