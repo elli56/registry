@@ -9,12 +9,14 @@ Dashboard page
 <h1>Profile</h1>
 <p>name: {{ user.username }}</p>
 <p>id: {{ user.id }}</p>
+<a class="p-2 text-dark" href="{{ url_for('dashboard_change_pass', user_id=user.id) }}">Сменить пароль</a>
 <div>
     <p>Личные данные</p>
     <p>имя: {{ user.name }}</p>
     <p>фамилия: {{ user.soname }}</p>
     <p>псевдоним: {{ user.nick }}</p>
     <a class="p-2 text-dark" href="{{ url_for('dashboard_update', user_id=user.id) }}">Редактировать личные данные</a>
+    
 </div>
 
 <a class="btn btn-warning mb-4" href="/create-entrie">Создать статью</a><br>

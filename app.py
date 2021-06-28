@@ -107,7 +107,6 @@ def register():
 @login_required
 def dashboard():
     user = current_user
-
     return render_template('dashboard.html', user=user)
 
 
@@ -124,6 +123,21 @@ def dashboard_update(user_id):
     return render_template('update_dashboard_info.html', user=user)
 
 
+@app.route('//dashboard-change-pass/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def dashboard_change_pass(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if request.method =='POST':
+        if bcrypt.check_password_hash(user.password, request.form['password_current']):
+            if request.form['password1'] == request.form['password2']:
+                user.password = bcrypt.generate_password_hash(request.form['password1'])
+                db.session.commit()
+                return redirect(url_for('dashboard'))
+            else:
+                flash('passwords are not equal')
+        else:
+            flash('Your current password is not correct!')
+    return render_template('dashboard_change_pass.html', user=user)
 
 
 
