@@ -31,7 +31,7 @@ class Entrie(db.Model):
     description = db.Column(db.String(150), nullable=False)
     content = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
-    private = db.Column(db.Boolean, default=True)
+    private = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
@@ -59,11 +59,11 @@ def main():
 def login():
     user = request.form.get('user') #запрашиваем через метод get что бы в случае чего не сломалось ничего
     password = request.form.get('pass')
-    if user and password:
-        user = User.query.filter_by(username=user).first()
-        if bcrypt.check_password_hash(user.password, password):
-            login_user(user)
-            session['user_id'] = user.id # сохраняем в сессию user_id что бы иметь доступ к нему из всех методов
+    db_user = User.query.filter_by(username=user).first()
+    if db_user and password:
+        if bcrypt.check_password_hash(db_user.password, password):
+            login_user(db_user)
+            session['user_id'] = db_user.id # сохраняем в сессию user_id что бы иметь доступ к нему из всех методов
             next_page = request.args.get('next') # Сохраняем тот адрес куда пользователь хотел попасть до перенаправления на авторизацию
             if next_page:
                 return redirect(next_page)
@@ -156,8 +156,8 @@ def create():
         title = request.form['title']
         description = request.form['description']
         content = request.form['content']
-
-        new_entrie = Entrie(title=title, description=description, content=content, user_id=current_user.id)
+        private = bool(request.form.get('private_entrie'))
+        new_entrie = Entrie(title=title, description=description, content=content, user_id=current_user.id, private=private)
         db.session.add(new_entrie)
         db.session.commit()
         return redirect(url_for('all_entries', id=session['user_id']))
@@ -180,6 +180,7 @@ def change(id):
         changing_entrie.title = request.form['title']
         changing_entrie.description = request.form['description']
         changing_entrie.content = request.form['content']
+        changing_entrie.private = bool(request.form.get('private_entrie'))
         db.session.commit()
         return redirect(url_for('all_entries', id=changing_entrie.user_id))
     
