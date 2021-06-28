@@ -7,7 +7,9 @@ changing password
 {% block body %}
 
 <h1>Changing pass</h1>
-
+<h1>Profile</h1>
+<p>name: {{ user.username }}</p>
+<p>id: {{ user.id }}</p>
 <h1>Изменение пароля</h1>
 <form action="" method="POST">
     <input type="text" name="password_current" id="password_current" class="form-control" placeholder="введите старый пароль" value=""><br>
